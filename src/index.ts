@@ -10,20 +10,19 @@
  *
  * Learn more at https://developers.cloudflare.com/workers/
  */
-import { PrismaClient } from '@prisma/client';
-import { PrismaD1 } from '@prisma/adapter-d1';
+import { createYoga } from 'graphql-yoga';
+import { schema } from './schema';
+import { createContext } from './context';
 
 export interface Env {
 	DB: D1Database;
 }
 
+const yoga = createYoga({ schema });
+
 export default {
 	async fetch(request: Request, env: Env, ctx: ExecutionContext): Promise<Response> {
-		const adapter = new PrismaD1(env.DB);
-		const prisma = new PrismaClient({ adapter });
-
-		const users = await prisma.user.findMany();
-		const result = JSON.stringify(users);
-		return new Response(result);
+		const context = createContext(env.DB);
+		return yoga(request, context);
 	},
 } satisfies ExportedHandler<Env>;

@@ -6,6 +6,15 @@ generator client {
   previewFeatures = ["driverAdapters"]
 }
 
+generator pothos {
+  provider = "prisma-pothos-types"
+}
+
+generator dmmf {
+  provider = "prisma-dmmf-generator"
+  output   = "./generated_dmmf.json"
+}
+
 datasource db {
   provider = "sqlite"
   url      = env("DATABASE_URL")
