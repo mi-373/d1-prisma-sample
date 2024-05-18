@@ -5,7 +5,7 @@ builder.queryFields((t) => ({
 		type: 'User',
 		nullable: true,
 		resolve: async (query, root, args, ctx, info) => {
-			return (await ctx.db.user.findMany())[0];
+			return await ctx.db.user.findFirst();
 		},
 	}),
 }));
